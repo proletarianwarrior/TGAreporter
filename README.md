@@ -30,7 +30,7 @@ a.total_plot()
 
 6. 根据弹出的特征点图片检查特征点位置是否合理（可通过绘图窗口的缩放工具查看细节）
 
-![](.\picture\1.png)
+<img src=".\picture\1.png">
 
 <img src=".\picture\2.png" style="zoom:50%;" />
 
@@ -120,20 +120,20 @@ a.correct_error(a.plot_fit_TG, method="hot", Tlim=(230, 350))
 
 1. `TG-T`图像
 
-![](.\picture\TG.png)
+<img src=".\picture\TG.png">
 
 2. `DTG-T`图像
 
-![](.\picture\DTG.png)
+<img src=".\picture\DTG.png">
 
 3. `DTG-TG-T`图像
 
-![](.\picture\DTG-TG.png)
+<img src=".\picture\DTG-TG.png">
 
 4. `DTG-Fit-T-hot`图像
 
-![](.\picture\DTG-Fit-hot.png)
+<img src=".\picture\DTG-Fit-hot.png">
 
 5. `DTG-Fit-T-burn`图像
 
-![](.\picture\DTG-Fit-burn.png)
+<img src=".\picture\DTG-Fit-burn.png">
