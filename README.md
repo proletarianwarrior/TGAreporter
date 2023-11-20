@@ -120,20 +120,20 @@ a.correct_error(a.plot_fit_TG, method="hot", Tlim=(230, 350))
 
 1. `TG-T`图像
 
-![](.\picture\TG.jpg)
+![](.\picture\TG.png)
 
 2. `DTG-T`图像
 
-![](.\picture\DTG.jpg)
+![](.\picture\DTG.png)
 
 3. `DTG-TG-T`图像
 
-![](.\picture\DTG-TG.jpg)
+![](.\picture\DTG-TG.png)
 
 4. `DTG-Fit-T-hot`图像
 
-![](.\picture\DTG-Fit-hot.jpg)
+![](.\picture\DTG-Fit-hot.png)
 
 5. `DTG-Fit-T-burn`图像
 
-![](.\picture\DTG-Fit-burn.jpg)
+![](.\picture\DTG-Fit-burn.png)

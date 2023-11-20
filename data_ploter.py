@@ -70,7 +70,7 @@ class DataPloter:
                            ) +
                      ggtitle("TG-T")
                      )
-        base_plot.save("./image/TG.jpg", dpi=dpi, width=self.width, height=self.height)
+        base_plot.save("./image/TG.png", dpi=dpi, width=self.width, height=self.height)
         Logger.info(f"保存TG数据")
         if show_fig:
             print(base_plot)
@@ -130,7 +130,7 @@ class DataPloter:
                            axis_text_x=element_text(rotation=90, hjust=0.5))
         base_plot += ggtitle("DTG-T")
 
-        base_plot.save("./image/DTG.jpg", dpi=dpi, width=self.width, height=self.height)
+        base_plot.save("./image/DTG.png", dpi=dpi, width=self.width, height=self.height)
         Logger.info(f"保存DTG数据")
         if show_fig:
             print(base_plot)
@@ -208,7 +208,7 @@ class DataPloter:
                           f"Average burning rate\t$\overline{{v}}$={round(100 * v, 3)}%",
                 font={"family": "Times New Roman", "size": 15})
         plt.title("DTG/TG-T", font={"family": "Times New Roman", "size": 18})
-        plt.savefig("./image/DTG-TG.jpg")
+        plt.savefig("./image/DTG-TG.png")
         Logger.info(f"保存DTG-TG数据")
         if show_fig:
             plt.show()
@@ -260,7 +260,7 @@ class DataPloter:
                      theme(text=element_text(size=12, family="Times New Roman"),
                            plot_title=element_text(size=18))
                      )
-        base_plot.save(f"./image/DTG-Fit-{method}.jpg", dpi=dpi, width=self.width, height=self.height)
+        base_plot.save(f"./image/DTG-Fit-{method}.png", dpi=dpi, width=self.width, height=self.height)
         Logger.info(f"保存{method}-TG拟合数据")
         if show_fig:
             print(base_plot)
