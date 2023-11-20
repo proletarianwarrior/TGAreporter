@@ -280,5 +280,5 @@ class DataPloter:
 
 
 if __name__ == '__main__':
-    a = DataPloter(9.4, "test/ymt.txt")
-    a.correct_error(a.plot_fit_TG, Tlim=[270, 330])
+    a = DataPloter(10, "test/ymt.txt")
+    a.total_plot()

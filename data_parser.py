@@ -59,7 +59,7 @@ def find_typical_minima(data, n, kwargs):
     most_typical_indices = np.argsort(typicality_scores)[-n:]
 
     # 返回结果：横坐标（索引）和纵坐标（实际最小值）
-    return [c_peaks[i] for i in most_typical_indices]
+    return [c_peaks[i] for i in most_typical_indices] if most_typical_indices else [0]
 
 
 def find_first_stable_point(data, kwargs):
@@ -70,7 +70,7 @@ def find_first_stable_point(data, kwargs):
     :param data: 数据点列表（一维）。
     :param window_size: 稳定性检查要考虑的点数。
     :param threshold: 将数据视为稳定数据的最大允许变化量。
-    :return: 第一个稳定点的索引，如果没有找到稳定点，则为 "None"。
+    :return: 第一个稳定点的索引，如果没有找到稳定点，则为 0。
     """
     window_size = kwargs.get("window_size", 500)
     threshold = kwargs.get("threshold", 1e-5)
@@ -81,7 +81,7 @@ def find_first_stable_point(data, kwargs):
         max_diff = np.array([abs(data[i] - data[j]) for j in range(i + 1, i + window_size)])
         if sum(max_diff > threshold) < del_size:
             return i
-    return None
+    return 0
 
 
 def get_chara_point(df: pd.DataFrame, x1: float = 1 / 4, x2: float = 1 / 3, x12: float = 3 / 4, recal=False, block=True, **kwargs):
@@ -111,6 +111,7 @@ def get_chara_point(df: pd.DataFrame, x1: float = 1 / 4, x2: float = 1 / 3, x12:
     max_x2 = find_first_stable_point(FDTG[min_x1:min_x3], kwargs) + min_x1 + index_min
     max_x3 = (min_x2 - min_x1) - find_first_stable_point(FDTG[min_x2:min_x1:-1], kwargs) + min_x1 + index_min
     max_x4 = FDTG[min_x3:min_x2].argmax() + min_x3 + index_min
+    min_x3 = FDTG[max_x3:max_x4].argmin() + max_x3 + index_min
     max_x5 = find_first_stable_point(FDTG[min_x2:], kwargs) + min_x2 + index_min
 
     result = {"min": [int(min_x1), int(min_x3), int(min_x2)],
