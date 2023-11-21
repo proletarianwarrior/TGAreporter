@@ -86,6 +86,7 @@ class DataPloter:
         y_min, y_max = self.get_min_max(self.FDTG, self.FDTGsep)
         x_label = np.arange(x_min, x_max + self.Tsep, self.Tsep).astype(int)
         x_label = np.hstack((x_label, [self.T[i] for i in X_min]))
+        x_label = np.hstack((x_label, [self.T[i] for i in X_max]))
         n_x_label = [f"{i: .2f}" for i in x_label]
         y_label = np.arange(y_min, y_max + self.FDTGsep, self.FDTGsep)
         y_label = np.hstack((y_label, self.FDTG.min()))
@@ -280,5 +281,5 @@ class DataPloter:
 
 
 if __name__ == '__main__':
-    a = DataPloter(10, "test/ymt.txt")
+    a = DataPloter(9.4, "test/ymt.txt")
     a.total_plot()
