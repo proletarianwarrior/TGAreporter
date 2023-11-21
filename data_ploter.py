@@ -220,9 +220,9 @@ class DataPloter:
         else:
             dpi = 200
         X_min, X_max = self.chara_points["min"], self.chara_points["max"]
-        if method == "hot":
+        if method == "hot" and not Tlim:
             x_sep_1, x_sep_2 = X_max[2], X_min[1]
-        elif method == "burn":
+        elif method == "burn" and not Tlim:
             x_sep_1, x_sep_2 = X_max[3], X_min[2]
         elif Tlim:
             x_sep_1 = sum(self.df["T"] < Tlim[0])
@@ -281,5 +281,6 @@ class DataPloter:
 
 
 if __name__ == '__main__':
-    a = DataPloter(9.4, "test/ymt.txt")
+    a = DataPloter(8.3, "test/ck.txt", recal=True)
     a.total_plot()
+    # a.correct_error(a.plot_fit_TG, method="burn")

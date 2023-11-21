@@ -132,7 +132,7 @@ def get_chara_point(df: pd.DataFrame, x1: float = 1 / 4, x2: float = 1 / 3, x12:
         if a.upper() == "N":
             break
         else:
-            v = float(input(f"{a}:"))
+            v = int(input(f"{a}:"))
             key = a[:3]
             value = int(a[-1])
             result[key][value - 1] = v
