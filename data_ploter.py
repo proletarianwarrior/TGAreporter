@@ -4,6 +4,7 @@
 # @File : data_ploter.py
 # @Software : PyCharm
 from typing import Union
+import json
 
 import pandas as pd
 from plotnine import *
@@ -16,9 +17,15 @@ from logger import Logger
 from data_parser import get_chara_point
 from data_loader import preprocess_data
 
+plt.rcParams['font.family'] = 'Times New Roman'
+plt.rcParams['xtick.direction'] = 'in'
+plt.rcParams['ytick.direction'] = 'in'
+
 
 class DataPloter:
     def __init__(self, w0: float, file_path: Union[Path, str], **kwargs):
+        self.name = file_path.split("/")[-1].split(".")[0]
+
         self.Tsep = kwargs.get("Tsep", 50)
         self.TGsep = kwargs.get("TGsep", 2)
         self.FDTGsep = kwargs.get("FDTGsep", 1e-4)
@@ -104,7 +111,8 @@ class DataPloter:
                      # watermark("./watermark/watermark.jpg", alpha=0.2) +
                      geom_line(aes(x=self.T_name, y=self.DTG_name), color="#F0AEA9", size=0.7, alpha=0.8) +
                      geom_line(color="#FC1944", size=1) +
-                     geom_point(aes(x="p_x", y="p_y"), data=point_df, size=2.5, shape="o", show_legend=False, color="black")
+                     geom_point(aes(x="p_x", y="p_y"), data=point_df, size=2.5, shape="o", show_legend=False,
+                                color="black")
                      )
         for x in X_max:
             base_plot += geom_vline(aes(xintercept=self.T[x]), linetype="--", color="grey")
@@ -116,15 +124,18 @@ class DataPloter:
                               ["water\nseparating", "coal\ndissolving", "carbon\nburning"]):
             i = self.T[i]
             j = self.T[j]
-            text_df = text_df.append({"x": (i + j) / 2, "y": (self.FDTG.max() - self.FDTG.min()) * 1 / 4 + self.FDTG.min(),
-                                      "label": t}, ignore_index=True)
+            text_df = text_df.append(
+                {"x": (i + j) / 2, "y": (self.FDTG.max() - self.FDTG.min()) * 1 / 4 + self.FDTG.min(),
+                 "label": t}, ignore_index=True)
             base_plot += geom_ribbon(aes(x=[i, j], ymin=[self.FDTG.min()] * 2, ymax=[self.FDTG.max()] * 2), fill=c,
                                      data=self.df.iloc[:2, :], alpha=0.4)
 
         base_plot += geom_text(aes(x="x", y="y", label="label"), data=text_df, show_legend=False, size=15,
                                family="Times New Roman")
-        base_plot += scale_x_continuous(name="T/\u2103", breaks=x_label, labels=n_x_label, limits=[x_label.min(), x_label.max()])
-        base_plot += scale_y_continuous(name="DTG/s", breaks=y_label, labels=n_y_label, limits=[y_label.min(), y_label.max()])
+        base_plot += scale_x_continuous(name="T/\u2103", breaks=x_label, labels=n_x_label,
+                                        limits=[x_label.min(), x_label.max()])
+        base_plot += scale_y_continuous(name="DTG/s", breaks=y_label, labels=n_y_label,
+                                        limits=[y_label.min(), y_label.max()])
         base_plot += theme_light()
         base_plot += theme(text=element_text(size=12, family="Times New Roman"),
                            plot_title=element_text(size=18),
@@ -171,7 +182,7 @@ class DataPloter:
         n2 = X_min[2]
         x2 = self.T[n2]
         y2 = self.FDTG[n2]
-        xs = np.arange(n2-10, n2+10)
+        xs = np.arange(n2 - 10, n2 + 10)
         k = np.polyfit([self.T[x] for x in xs], [self.TG[x] for x in xs], 1)
         y0 = np.linspace(TG_ylim[0], TG_ylim[1], 1000)
         x0 = (y0 - k[1]) / k[0]
@@ -204,9 +215,9 @@ class DataPloter:
         Tif = x5 - x3
         v = beta * aif / Tif
         ax.text(70, -6, f"combustion point\t$T_i$={round(x3, 2)}\nignition point\t$T_f$={round(x5, 2)}\n"
-                          f"Maximum burning rate\t$v_p$={y2:.2e}\n"
-                          f"Maximum burning temperature\t$T_p$={round(x2, 2)}\n"
-                          f"Average burning rate\t$\overline{{v}}$={round(100 * v, 3)}%",
+                        f"Maximum burning rate\t$v_p$={y2:.2e}\n"
+                        f"Maximum burning temperature\t$T_p$={round(x2, 2)}\n"
+                        f"Average burning rate\t$\overline{{v}}$={round(100 * v, 3)}%",
                 font={"family": "Times New Roman", "size": 15})
         plt.title("DTG/TG-T", font={"family": "Times New Roman", "size": 18})
         plt.savefig("./image/DTG-TG.png")
@@ -247,6 +258,22 @@ class DataPloter:
         E = -k[0] * 8.314
         k0 = np.exp(k[1])
 
+        new_json_data = {
+            "E": E,
+            "k0": k0,
+            "A": k[0],
+            "b": k[1],
+            "corr": corr,
+            "T-min-max": [Tmin, Tmax],
+            "x": x.tolist(),
+            "y": y.tolist(),
+            "1/T": n_df["1/T"].tolist(),
+            "lnk": n_df["lnk"].tolist()
+        }
+        with open(f"./file/{self.name}_{method}.json", "w") as file:
+            json.dump(new_json_data, file, indent=3)
+        Logger.info(f"保存{self.name}_{method}.json成功!")
+
         base_plot = (ggplot(n_df, aes(x="1/T", y="lnk")) +
                      # watermark("./watermark/watermark.jpg", alpha=0.2) +
                      geom_line(color="#FFE14D", size=1) +
@@ -273,6 +300,36 @@ class DataPloter:
         self.plot_fit_TG(method="hot")
         self.plot_fit_TG(method="burn")
 
+    def plot_Union_fit(self, method, labels, *names):
+        colors = ["#fc8d59", "#67a9cf", "#91cf60"]
+        plt.figure(figsize=(self.width, self.height), dpi=200)
+        plt.xlabel("T/K", fontdict={"family": "Times New Roman", "size": 16})
+        plt.ylabel("DTG/s", fontdict={"family": "Times New Roman", "size": 16})
+        cell_text = []
+        for name, color, label in zip(names, colors, labels):
+            with open(f"./file/{name}_{method}.json", "r") as file:
+                data = json.load(file)
+                x0 = data["x"]
+                y0 = data["y"]
+                x = data["1/T"]
+                y = data["lnk"]
+                cell_text.append([round(data["E"], 2), round(data["k0"], 2), *[round(i, 2) for i in data["T-min-max"]],
+                                  round(data["corr"], 3), round(data["A"], 2), round(data["b"], 2)])
+                plt.plot(x0, y0, color="black", linewidth=0.8)
+                plt.plot(x, y, color=color, label=label)
+        plt.plot(x0, y0, color="black", linewidth=0.8, label="Fit-line")
+        plt.legend(prop={"family": "Times New Roman", "size": 12})
+        plt.table(cellText=cell_text,
+                  rowLabels=[l.split("-")[-1] for l in labels],
+                  colLabels=['E', 'k0', 'Tmin', 'Tmax', "R", "A", "b"],
+                  loc='top',
+                  cellLoc="center"
+                  )
+        # plt.subplots_adjust(top=0.9)
+        plt.grid()
+        plt.savefig(f"./image/DTG-Fit-Union-{method}.png")
+        Logger.info("保存联合DTG拟合数据")
+
     def correct_error(self, func, **kwargs):
         if kwargs:
             func(show_fig=True, **kwargs)
@@ -281,6 +338,7 @@ class DataPloter:
 
 
 if __name__ == '__main__':
-    a = DataPloter(8.3, "test/ck.txt", recal=True)
-    a.total_plot()
-    # a.correct_error(a.plot_fit_TG, method="burn")
+    a = DataPloter(8.3, "data/ck.txt", recal=False)
+    # a.total_plot()
+    # a.correct_error(a.plot_fit_TG, method="burn", Tlim=(425, 482.70))
+    a.plot_Union_fit("hot", ["lab-5-Anthracite", "lab-6-Bituminous", "lab-7-Lignite"], "wll", "ck", "ymt")

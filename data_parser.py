@@ -111,7 +111,8 @@ def get_chara_point(df: pd.DataFrame, x1: float = 1 / 4, x2: float = 1 / 3, x12:
     max_x2 = find_first_stable_point(FDTG[min_x1:min_x3], kwargs) + min_x1 + index_min
     max_x3 = (min_x2 - min_x1) - find_first_stable_point(FDTG[min_x2:min_x1:-1], kwargs) + min_x1 + index_min
     max_x4 = FDTG[min_x3:min_x2].argmax() + min_x3 + index_min
-    min_x3 = FDTG[max_x3:max_x4].argmin() + max_x3 + index_min
+    if max_x3 < max_x4:
+        min_x3 = FDTG[max_x3:max_x4].argmin() + max_x3 + index_min
     max_x5 = find_first_stable_point(FDTG[min_x2:], kwargs) + min_x2 + index_min
 
     result = {"min": [int(min_x1), int(min_x3), int(min_x2)],
@@ -145,8 +146,4 @@ def get_chara_point(df: pd.DataFrame, x1: float = 1 / 4, x2: float = 1 / 3, x12:
 
 
 if __name__ == '__main__':
-    from data_loader import load_data, preprocess_data
-
-    df = load_data("test/zdw.txt")
-    df = preprocess_data(9.4, df, drop_first=True, a=0.03)
-    x = get_chara_point(df, recal=True)
+    pass

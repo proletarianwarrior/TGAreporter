@@ -78,6 +78,6 @@ def preprocess_data(w0: float, file_path: Union[Path, str], old_columns: tuple[s
 
 
 if __name__ == '__main__':
-    df = preprocess_data(9.4, "test/ymt.txt")
+    df = preprocess_data(9.4, "data/ymt.txt")
     print(df)
 

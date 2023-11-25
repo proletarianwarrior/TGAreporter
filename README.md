@@ -10,7 +10,7 @@
 2. 生成绘图器实例`DataPloter`
 
 ```python
-a = DataPloter(10, "test/test.txt")
+a = DataPloter(10, "data/data.txt")
 ```
 
 > 第一个参数为`w0`为所用样品的重量，单位为`mg`
@@ -53,7 +53,7 @@ a.total_plot()
 使用方式如下：
 
 ```python
-a = DataPloter(10, "test/test.txt", filter_method="butter", N=2, Wn=0.03)
+a = DataPloter(10, "data/data.txt", filter_method="butter", N=2, Wn=0.03)
 ```
 
 > 参数`filter_method`可选择`butter`、`inertial`分别是高斯低通滤波和惯性滤波
