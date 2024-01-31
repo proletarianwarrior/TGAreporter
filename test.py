@@ -1,21 +1,12 @@
-# -*- coding: utf-8 -*-
-# @Time : 2023/11/23 22:23
-# @Author : DanYang
-# @File : test.py
-# @Software : PyCharm
-import json
+from pathlib import Path
 
-import pandas as pd
-import numpy as np
+from FilterParameterSelect import select_filter_param
+from FeaturePointSelect import select_feature_points
+from PowerIntervalSelect import select_power_interval
+from DocReporter import create_doc
 
-
-def save_csv(file_name, method):
-    with open(f"./file/{file_name}_{method}.json", "r") as file:
-        data = json.load(file)
-    x = data["1/T"]
-    y = data["lnk"]
-    df = pd.DataFrame(data=np.array([x, y]).T, columns=["1/T", "lnk"])
-    df.to_excel(f"{file_name}_{method}.xlsx")
-
-
-save_csv("ymt", "burn")
+file_path = Path('./data/tjh.txt')
+select_filter_param(file_path, method='butter')  # 滤波参数选择器
+# select_feature_points(file_path)  # 特征点选择器
+# select_power_interval(file_path)  # 动力反应区间选择器
+# create_doc(file_path)  # 生成绘图报告
